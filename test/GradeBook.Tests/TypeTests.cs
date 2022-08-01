@@ -37,8 +37,6 @@ public class TypeTests
 
         Assert.Equal("Omnia", name);
         Assert.Equal("OMNIA", upper);
-
-
     }
 
     private string MakeUpperCase(string parameter)
@@ -134,7 +132,6 @@ public class TypeTests
         book = new InMemoryBook(name);
         book.Name = name;
     }
-
     [Fact]
     public void GetBookReturnsDifferentObjects()
     {
@@ -146,7 +143,6 @@ public class TypeTests
         Assert.Equal("Book 2", book2.Name);
         Assert.NotEqual(book1, book2);
     }
-
     [Fact]
     public void TwoVarsCanReferenceSameObject()
     {

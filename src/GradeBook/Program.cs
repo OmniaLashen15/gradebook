@@ -10,6 +10,8 @@ namespace GradeBook
         static void Main(string[] args)
         {
             #region Class
+            //var book = new DiskBook("Omnia's Grade Book");
+
             var book = new InMemoryBook("Omnia's Grade Book");
             book.GradeAdded += OnGradeAdded;
 
@@ -17,7 +19,7 @@ namespace GradeBook
 
             var stats = book.GetStatistics();
 
-            Console.WriteLine(InMemoryBook.CATEGORY);
+
             Console.WriteLine($"For the book named {book.Name}");
             Console.WriteLine($"The average grade is {stats.Average:N1}");
             Console.WriteLine($"The lowest grade is {stats.Low}");
@@ -93,7 +95,7 @@ namespace GradeBook
                 {
                     var grade = double.Parse(input);
                     book.AddGrade(grade);
-                    book.AddGrade('A');
+                    //book.AddGrade('A');
                 }
 
                 catch (ArgumentException ex)

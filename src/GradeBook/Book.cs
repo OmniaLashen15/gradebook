@@ -23,14 +23,46 @@ namespace GradeBook
         public Book(string name) : base(name)
         {
         }
-
-        public virtual event GradeAddedDelegate GradeAdded;
-
+        public abstract event GradeAddedDelegate GradeAdded;
         public abstract void AddGrade(double grade);
+        public abstract Statistics GetStatistics();
+    }
 
-        public virtual Statistics GetStatistics()
+    public class DiskBook : Book
+    {
+        public DiskBook(string name) : base(name)
         {
-            throw new NotImplementedException();
+        }
+
+        public override event GradeAddedDelegate GradeAdded;
+
+        public override void AddGrade(double grade)
+        {
+            using (var writer = File.AppendText($"{Name}.txt"))
+            {
+                writer.WriteLine(grade);
+                if (GradeAdded != null)
+                {
+                    GradeAdded(this, new EventArgs());
+                }
+            }
+            // writer.Dispose();   //Dispose() and Close() are doing the same thing, they clean up and free the underlying resource 
+        }
+
+        public override Statistics GetStatistics()
+        {
+            var result = new Statistics();
+            using (var reader = File.OpenText($"{Name}.txt"))
+            {
+                var line = reader.ReadLine();
+                while (line != null)
+                {
+                    var number = double.Parse(line);
+                    result.Add(number);
+                    line = reader.ReadLine();
+                }
+            }
+            return result;
         }
     }
 
@@ -92,60 +124,38 @@ namespace GradeBook
         public override Statistics GetStatistics()
         {
             var result = new Statistics();
-            //var result = 0.0;
-            //var highestGrade = double.MinValue;
-            //var lowestGrade = double.MaxValue;
-            result.Average = 0.0;
-            result.High = double.MinValue;
-            result.Low = double.MaxValue;
-
-            /// foreach (var grade in grades)
-            //var index = 0;
-            /// do  // if the list is empty this will fail because it runs at least one time trying index empty list
-            //while (index < grades.Count)
+            {
+                //var result = 0.0;
+                //var highestGrade = double.MinValue;
+                //var lowestGrade = double.MaxValue;
+                /*
+                result.Average = 0.0;
+                result.High = double.MinValue;
+                result.Low = double.MaxValue;
+                */
+                /// foreach (var grade in grades)
+                //var index = 0;
+                /// do  // if the list is empty this will fail because it runs at least one time trying index empty list
+                //while (index < grades.Count)
+            }
             for (var index = 0; index < grades.Count; index++)
             {
-                // if (number > highGrade)
-                // {
-                //     highGrade = number;
-                // }
-                /*if (grades[index] == 42.1)
                 {
-                    /// break; // exit the loop 
-                    /// continue; // continue by skipping the lines below
-                    /// goto done;
-                }*/
-                /*Static method*/
-                result.High = Math.Max(grades[index], result.High);
-                result.Low = Math.Min(grades[index], result.Low);
-                result.Average += grades[index];
+                    // if (number > highGrade)
+                    // {
+                    //     highGrade = number;
+                    // }
+                    /*if (grades[index] == 42.1)
+                    {
+                        /// break; // exit the loop 
+                        /// continue; // continue by skipping the lines below
+                        /// goto done;
+                    }*/
+                }
+
+                result.Add(grades[index]);
                 //index++;
             }//while (index < grades.Count);
-
-            result.Average /= grades.Count;
-
-            switch (result.Average)
-            {
-                case var d when d >= 90.0:
-                    result.Letter = 'A';
-                    break;
-
-                case var d when d >= 80.0:
-                    result.Letter = 'B';
-                    break;
-
-                case var d when d >= 70.0:
-                    result.Letter = 'C';
-                    break;
-
-                case var d when d >= 60.0:
-                    result.Letter = 'D';
-                    break;
-
-                default:
-                    result.Letter = 'F';
-                    break;
-            }
 
             /// done:
             return result;
