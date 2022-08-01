@@ -92,7 +92,7 @@ public class TypeTests
         Assert.Equal("New Name", book1.Name);
 
     }
-    private void SetName(Book book, string name)
+    private void SetName(InMemoryBook book, string name)
     {
         book.Name = name;
     }
@@ -112,9 +112,9 @@ public class TypeTests
 
 
     }
-    private void GetBookSetName(Book book, string name)
+    private void GetBookSetName(InMemoryBook book, string name)
     {
-        book = new Book(name);
+        book = new InMemoryBook(name);
         book.Name = name;
     }
     [Fact]
@@ -129,9 +129,9 @@ public class TypeTests
         Assert.Equal("New Name", book1.Name);
 
     }
-    private void GetBookSetName(out Book book, string name)
+    private void GetBookSetName(out InMemoryBook book, string name)
     {
-        book = new Book(name);
+        book = new InMemoryBook(name);
         book.Name = name;
     }
 
@@ -157,8 +157,8 @@ public class TypeTests
         Assert.Same(book1, book2); // to check that book1 and book2 references to the same instance
         Assert.True(Object.ReferenceEquals(book1, book2)); // is the same as Assert.Same
     }
-    Book GetBook(string name)
+    InMemoryBook GetBook(string name)
     {
-        return new Book(name);
+        return new InMemoryBook(name);
     }
 }

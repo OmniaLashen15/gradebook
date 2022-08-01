@@ -1,22 +1,56 @@
 namespace GradeBook
 {
     public delegate void GradeAddedDelegate(Object sender, EventArgs args);  //object to take any parameter of any data type
-    public class Book
+    /// Base Class
+    public class NamedObject
+    {
+        public NamedObject(string name)
+        {
+            Name = name;
+        }
+        public string Name { get; set; }
+    }
+    public interface IBook
+    {
+        void AddGrade(double grade);
+        Statistics GetStatistics();
+        string Name { get; }
+        event GradeAddedDelegate GradeAdded;
+
+    }
+    public abstract class Book : NamedObject, IBook // class cany implement many interface but not many classes as multiple inheritance isn't allowed
+    {
+        public Book(string name) : base(name)
+        {
+        }
+
+        public virtual event GradeAddedDelegate GradeAdded;
+
+        public abstract void AddGrade(double grade);
+
+        public virtual Statistics GetStatistics()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// Derived class
+    public class InMemoryBook : Book
     {
 
         List<double> grades;
-        public string Name { get; set; }
+
         //readonly string category = "Science";
         public const string CATEGORY = "Science";
 
-        public Book(string name)
+        public InMemoryBook(string name) : base(name)
         {
             grades = new();
-            Name = name;
+            //Name = name;
         }
 
 
-        public void AddGrade(double grade)
+        public override void AddGrade(double grade)
         {
             if (grade <= 100 && grade >= 0)
             {
@@ -32,7 +66,7 @@ namespace GradeBook
             }
         }
 
-        public event GradeAddedDelegate GradeAdded; // event keyword is used to add some restrictions and gives capabilities to this GradeAddedDelegate
+        public override event GradeAddedDelegate GradeAdded; // event keyword is used to add some restrictions and gives capabilities to this GradeAddedDelegate
 
         public void AddGrade(char letter)
         {
@@ -55,7 +89,7 @@ namespace GradeBook
                     break;
             }
         }
-        public Statistics GetStatistics()
+        public override Statistics GetStatistics()
         {
             var result = new Statistics();
             //var result = 0.0;
